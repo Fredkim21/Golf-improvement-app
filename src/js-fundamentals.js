@@ -5,8 +5,15 @@
  * ex: isNegativeOrOdd(2); -> false
  */
 function isNegativeOrOdd(value) {
-
+  // if value is < 0 or !%2 than return true
+  if (value < 0 || value % 2 !== 0) {
+    return true;
+  } else {
+    return false;
+  }
 }
+// console.log(isNegativeOrOdd(1));
+
 
 /**
  * repeats the given string count times
@@ -15,8 +22,18 @@ function isNegativeOrOdd(value) {
  * repeat('abc',0); -> ''
  */
 function repeat(string, count) {
+  // use recursion
+  // base case: 
+  // count <= 0, return empty string
+  if (count <= 0) {
+    return ''
+  }
 
+  return string + repeat(string, count - 1)
 }
+
+// console.log(repeat('abc', 0))
+
 
 /**
  * returns a string that is the reverse of the inputted string
@@ -25,8 +42,18 @@ function repeat(string, count) {
  * reverseString('will'); -> 'lliw'
  */
 function reverseString(string) {
-
+  // create a results variable, which is an empty string
+  let results = '';
+  // use a for loop in reverse start using string length, to zero and itterate by -1
+  for (let i = string.length - 1; i >= 0; i--) {
+    // for each loop, add current character to results string
+    results = results + string[i];
+  }
+  // return results string
+  return results;
 }
+
+// console.log(reverseString('hello'));
 
 /**
  * accepts an object and returns an object with key and values switched
