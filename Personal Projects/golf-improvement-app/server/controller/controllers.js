@@ -50,20 +50,17 @@ golfController.updateDrill = async (drillId, updatedDrill) => {
 
 const userController = {};
 
-userController.createUser = async (req, res) => {
+userController.signup = async (req, res) => {
   try {
-    const { username, password, email } = req.body;
-    // insert new user into database
-    const insertUserText = 'INSERT INTO users_credentials (user_id, username, password) VALUES (DEFAULT, $1, $2) RETURNING *';
-    const { rows } = await query(insertUserText, [username, password]);
-    // insert user email into database
-    const userId = rows[0].user_id;
-    const insertEmailText = 'INSERT INTO users (user_id, email) VALUES ($1, $2)';
-    await query(insertEmailText, [userId, email]);
-    res.status(201).send(rows[0]);
+    const { username, password} = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const createText =
+      "INSERT INTO users_credentials (user_id, username, password) VALUES (DEFAULT, $1, $2) RETURNING user_id";
+    const { rows } = await query(createText, [username, hashedPassword]);
+    res.status(201).send({ user_id: rows[0].user_id });
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error creating user');
+    res.status(500).send("error creating user");
   }
 };
 
@@ -93,8 +90,7 @@ userController.getProfile = async (req, res) => {
   try {
     const { userId } = req.body;
     const getProfileText = 'SELECT * FROM users WHERE user_id = $1';
-    const { rows } = await query(getProfileText, [userId]);
-    if(rows.length === 0) {
+ß    if(rows.length === 0) {
       return res.status(401).send('Invalid user');
     }
     res.status(200).send(rows[0]);
@@ -103,5 +99,38 @@ userController.getProfile = async (req, res) => {
     res.status(500).send('error getting user');
   }
 };
+
+const updateUserScore = async (req, res) => {
+  const { user_id } = req.params;
+  const { category, rating } = req.body;
+
+  try {
+    const client = await pool.connect();
+    const result = await client.query(
+      "SELECT * FROM users WHERE user_id = $1",
+      [user_id]
+    );
+    if (result.rowCount === 0) {
+      client.release();
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const updatedScore = { ...result.rows[0].score };
+    updatedScore[category] = rating;
+
+    await client.query(
+      "UPDATE users SET score = $1 WHERE user_id = $2",
+      [updatedScore, user_id]
+    );
+
+    client.release();
+    res.json({ message: "User score updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
 
 module.exports = golfController, userController;

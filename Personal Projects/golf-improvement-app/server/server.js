@@ -1,7 +1,6 @@
-import express from "express";
-import bodyParser from "body-parser";
+import express from 'express';
+import bodyParser from 'body-parser';
 import cors from "cors";
-import multer from "multer";
 import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
@@ -28,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // get requests for each route handler
 app.get('/', (req, res) => {
-  res.status(200).sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.status(200).sendFile(path.join(__dirname, 'index.html'));
 });
 
 
@@ -52,4 +51,4 @@ app.listen(PORT, () => {
   console.log(`Server listening on port: ${PORT}...`);
 });
 
-module.exports = app;
+export default app;
