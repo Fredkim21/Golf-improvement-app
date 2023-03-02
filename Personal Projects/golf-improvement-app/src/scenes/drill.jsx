@@ -6,6 +6,20 @@ const DrillsPage = () => {
   const [drill, setDrill] = useState(null);
   const [sliderValue, setSliderValue] = useState(0);
   
+  const getUserIdFromCookie = () => {
+    const cookies = document.cookie.split(";"); // split cookies into an array
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith("user_id=")) { // check if cookie name matches "user_id"
+        const userId = cookie.substring("user_id=".length, cookie.length); // extract the user_id value
+        return userId;
+      }
+    }
+    return null; // return null if user_id cookie is not found
+  };
+  
+  const userId = getUserIdFromCookie();
+
   useEffect(() => {
     const fetchDrill = async () => {
       try {
@@ -26,7 +40,7 @@ const DrillsPage = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`/users/${user_id}`, {
+      const response = await fetch(`/users/${userId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
