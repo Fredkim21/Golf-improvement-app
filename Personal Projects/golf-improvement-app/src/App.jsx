@@ -1,11 +1,10 @@
-import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import HomePage from "./scenes/home.jsx";
-import LoginPage from "./scenes/login.jsx";
-import SignupPage from "./scenes/signup.jsx"
-import ProfilePage from "./scenes/profile.jsx";
-import DrillsPage from "./scenes/drill.jsx";
-import SkillsPage from "./scenes/categories.jsx";
+import HomePage from "./scenes/home";
+import LoginPage from "./scenes/login";
+import SignupPage from "./scenes/signup"
+import ProfilePage from "./scenes/profile";
+import DrillsPage from "./scenes/drill";
+import SkillsPage from "./scenes/categories";
 
 function App() {
   return (
