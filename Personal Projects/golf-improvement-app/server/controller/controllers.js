@@ -90,7 +90,7 @@ userController.getProfile = async (req, res) => {
   try {
     const { userId } = req.body;
     const getProfileText = 'SELECT * FROM users WHERE user_id = $1';
-ß    if(rows.length === 0) {
+    if(rows.length === 0) {
       return res.status(401).send('Invalid user');
     }
     res.status(200).send(rows[0]);

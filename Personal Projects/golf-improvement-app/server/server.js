@@ -1,21 +1,20 @@
 const express = require('express');
 const path = require("path");
+const router = require('./routes/api');
 
 const app = express();
 app.use(express.json());
 
 
-app.use("/assets", express.static(path.join(__dirname, 'public/assets')));
+// app.use("/assets", express.static(path.join(__dirname, 'public/assets')));
 
 const PORT = 3000;
 
 // static files from the 'build' folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-// get requests for each route handler
-app.get('/', (req, res) => {
-  res.status(200).sendFile(path.join(__dirname, 'index.html'));
-});
+// send all api calls to the router
+app.use('/api', router);
 
 
 // catch-all route handler for any requests to an unknown route

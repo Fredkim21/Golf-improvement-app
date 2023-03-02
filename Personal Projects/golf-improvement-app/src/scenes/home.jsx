@@ -8,17 +8,17 @@ const HomePage = () => {
     { id: 3, title: 'Chipping drill 1' },
   ]);
 
-  // useEffect(() => {
-  //   // fetch drills from database
-  //   const fetchDrills = async () => {
-  //     const response = await fetch(/* fetch call to db goes in */);
-  //     const data = await response.json();
-  //     console.log(data);
-  //     setDrills(data);
-  //   };
-  // 
-  //   fetchDrills();
-  // }, []);
+  useEffect(() => {
+    // fetch drills from database
+    const fetchDrills = async () => {
+      const response = await fetch('/api/drills');
+      const data = await response.json();
+      console.log(data);
+      setDrills(data);
+    };
+  
+    fetchDrills();
+  }, []);
 
   return (
     <div>
