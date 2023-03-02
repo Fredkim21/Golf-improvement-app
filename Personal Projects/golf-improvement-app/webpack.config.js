@@ -1,11 +1,17 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+
+const {NODE_ENV} = process.env;
+console.log('\n the NODE_ENV is ', NODE_ENV);
 
 module.exports = {
+  mode: process.env.NODE_ENV || 'development',
+
   entry: `./src/index.js`,
 
   output: {
-    path: path.resolve(__dirname, "/dist"),
+    path: path.resolve(__dirname, "/public"),
     filename: "bundle.js",
     publicPath: '/',
   },
@@ -20,15 +26,22 @@ module.exports = {
     
     static: {
       // match the output path
-      directory: path.resolve(__dirname, 'dist'),
+      directory: path.resolve(__dirname, 'public'),
       // match the output 'publicPath'
       publicPath: '/',
     },
+
+    proxy: {
+      '/api': 'http://localhost:3000'
+    }
   }
   ,
   plugins: [
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: "./src/index.html",
+      title: 'Development',
+      filename: 'index.bundle.js',
+      template: 'src/index.html',
     }),
   ],
   
@@ -51,5 +64,12 @@ module.exports = {
   resolve: {
     // Enable importing JS / JSX files without specifying their extension
     extensions: ['.js', '.jsx'],
+    fallback: {
+      path: require.resolve("path-browserify"),
+    },
+    fallback: {
+      "util": require.resolve("util/"),
+      "fs": false
+    },
   },
 };

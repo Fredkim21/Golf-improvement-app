@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import bcrypt from 'bcrypt';
 import axios from 'axios';
 
@@ -7,7 +7,8 @@ import axios from 'axios';
 function SignUpPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const history = useHistory();
+
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -15,10 +16,6 @@ function SignUpPage() {
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
-  };
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
   };
 
   const handleSubmit = async (e) => {
@@ -29,14 +26,15 @@ function SignUpPage() {
     // send data to backend to create new user
     console.log("Username:", username);
     console.log("Password:", hashedPassword);
-    console.log("Email:", email);
-    axios.post('/api/users', {
+    axios.post('/api/signup', {
       username,
       password: hashedPassword,
-      email
     })
-    .then(response => {
+    then((response) => {
       console.log(response.data);
+      // send user to their profile page
+      const userId = response.data.user_id;
+      history.push(`/profile?user_id=${userId}`);
     })
     .catch(error => {
       console.error(error);
@@ -63,15 +61,7 @@ function SignUpPage() {
           onChange={handlePasswordChange}
         />
 
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={handleEmailChange}
-        />
-
-        <button type="submit">Sign up</button>
+        <button type="submit">Signup</button>
       </form>
       <Link to="/login">Login</Link>
     </div>

@@ -100,7 +100,7 @@ userController.getProfile = async (req, res) => {
   }
 };
 
-const updateUserScore = async (req, res) => {
+userController.updateUserScore = async (req, res) => {
   const { user_id } = req.params;
   const { category, rating } = req.body;
 
