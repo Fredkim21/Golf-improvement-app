@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from 'react-router-dom';
+import axios from 'axios';
+import bcrypt from 'bcrypt';
 
 function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const history = useHistory();
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -13,11 +16,25 @@ function LoginPage() {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    // hash password
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
     // send data to backend to verify
-    console.log("Username:", username);
-    console.log("Password:", password);
+    axios.post('/api/login', {
+      username,
+      password: hashedPassword
+    })
+    .then(response => {
+      console.log(response.data);
+      // sending down userId so profile can grab userId from table
+      const userId = response.data.user_id;
+      history.push(`/profile?user_id=${userId}`);
+    })
+    .catch(error => {
+      console.error(error);
+    });
   };
 
   return (
