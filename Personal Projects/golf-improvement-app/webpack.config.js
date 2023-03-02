@@ -3,22 +3,35 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   entry: `./src/index.js`,
-  mode: "development",
-  output: {
-    path: path.join(__dirname, "/dist"),
-    filename: "index.bundle.js",
-  },
 
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, "index.html"),
-    }),
-  ],
+  output: {
+    path: path.resolve(__dirname, "/dist"),
+    filename: "bundle.js",
+    publicPath: '/',
+  },
 
   devServer: {
-    port: 3000,
-  },
-
+    host: 'localhost',
+    port: 8080,
+    // enable HMR on the devServer
+    hot: true,
+    // fallback to root for other urls
+    historyApiFallback: true,
+    
+    static: {
+      // match the output path
+      directory: path.resolve(__dirname, 'dist'),
+      // match the output 'publicPath'
+      publicPath: '/',
+    },
+  }
+  ,
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./src/index.html",
+    }),
+  ],
+  
   module: {
     rules: [
       {
@@ -33,5 +46,10 @@ module.exports = {
         use: ["style-loader", "css-loader"],
       },
     ],
+  },
+
+  resolve: {
+    // Enable importing JS / JSX files without specifying their extension
+    extensions: ['.js', '.jsx'],
   },
 };
