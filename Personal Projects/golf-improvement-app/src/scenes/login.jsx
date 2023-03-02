@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import bcrypt from 'bcrypt';
 
 function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -30,7 +30,7 @@ function LoginPage() {
       console.log(response.data);
       // sending down userId so profile can grab userId from table
       const userId = response.data.user_id;
-      history.push(`/profile?user_id=${userId}`);
+      navigate(`/profile?user_id=${userId}`);
     })
     .catch(error => {
       console.error(error);

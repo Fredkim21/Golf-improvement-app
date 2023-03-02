@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import bcrypt from 'bcrypt';
 import axios from 'axios';
 
@@ -7,7 +7,7 @@ import axios from 'axios';
 function SignUpPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const history = useHistory();
+  const navigate = useNavigate();
 
 
   const handleUsernameChange = (e) => {
@@ -34,7 +34,7 @@ function SignUpPage() {
       console.log(response.data);
       // send user to their profile page
       const userId = response.data.user_id;
-      history.push(`/profile?user_id=${userId}`);
+      navigate(`/profile?user_id=${userId}`);
     })
     .catch(error => {
       console.error(error);

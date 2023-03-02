@@ -57,7 +57,39 @@ module.exports = {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
       },
+      {
+        test: /\.html$/i,
+        loader: 'html-loader',
+        options: {
+          sources: {
+            list: [
+              {
+                tag: 'img',
+                attribute: 'data-src',
+                type: 'src',
+              },
+              {
+                tag: 'img',
+                attribute: 'src',
+                type: 'src',
+              },
+              {
+                tag: 'link',
+                attribute: 'href',
+                type: 'src',
+              },
+            ],
+          },
+        },
+      },
     ],
+  },
+
+  target: "node",
+  node: {
+    __dirname: false,
+    __filename: false,
+    global: true
   },
 
   resolve: {
@@ -65,6 +97,7 @@ module.exports = {
     extensions: [".js", ".jsx"],
     fallback: {
       path: require.resolve("path-browserify"),
+      nock: require.resolve('nock'),
     },
     fallback: {
       util: require.resolve("util/"),
@@ -75,15 +108,15 @@ module.exports = {
       zlib: false,
       http: false,
       https: false,
-      "crypto": false,
-      "crypto-browserify": require.resolve("crypto-browserify"),
-      "assert": false,
-      "buffer": false,
-      "process": false,
-      "os": false,
-      "url": false,
-      "stream": false,
-      "constants": false
+      crypto: require.resolve("crypto-browserify"),
+      assert: false,
+      buffer: false,
+      process: false,
+      os: false,
+      url: false,
+      stream: false,
+      constants: false,
+      path: require.resolve("path-browserify"),
     },
   },
 };

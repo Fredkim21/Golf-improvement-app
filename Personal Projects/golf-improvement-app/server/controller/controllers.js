@@ -1,4 +1,4 @@
-const { query } = require('../models/golfModels');
+const { query } = require('../database/pgdb');
 
 
 const golfController = {};
