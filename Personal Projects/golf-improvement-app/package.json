@@ -7,22 +7,16 @@
     "dev": "NODE_ENV=development nodemon server/server.js & NODE_ENV=development webpack serve",
     "build": "webpack"
   },
-
   "keywords": [],
   "author": "Fred https://github.com/Fredkim21",
   "license": "ISC",
   "dependencies": {
-    "crypto-browserify": "^3.12.0",
     "express": "^4.18.2",
-    "mock-aws-s3": "^4.0.2",
-    "node-pre-gyp": "^0.17.0",
-    "path-browserify": "^1.0.1",
     "pg": "^8.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^6.8.2",
-    "recharts": "^2.4.3",
-    "util": "^0.12.5"
+    "recharts": "^2.4.3"
   },
   "devDependencies": {
     "@babel/core": "^7.21.0",
@@ -36,11 +30,12 @@
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "clean-webpack-plugin": "^4.0.0",
-    "cors": "^2.8.5",
     "css-loader": "^6.7.3",
     "file-loader": "^6.2.0",
+    "html-loader": "^4.2.0",
     "html-webpack-plugin": "^5.5.0",
     "nodemon": "^2.0.20",
+    "raw-loader": "^4.0.2",
     "react-router-dom": "^6.8.2",
     "style-loader": "^3.3.1",
     "webpack": "^5.75.0",

@@ -1,6 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const { node } = require("prop-types");
 
 const { NODE_ENV } = process.env;
 console.log("\n the NODE_ENV is ", NODE_ENV);
@@ -11,14 +11,14 @@ module.exports = {
   entry: `./src/index.js`,
 
   output: {
-    path: path.resolve(__dirname, "/public"),
+    path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
     publicPath: "/",
   },
 
   devServer: {
-    host: "localhost",
-    port: 8080,
+    compress: true,
+    port: 8000,
     // enable HMR on the devServer
     hot: true,
     // fallback to root for other urls
@@ -26,7 +26,7 @@ module.exports = {
 
     static: {
       // match the output path
-      directory: path.resolve(__dirname, "public"),
+      directory: path.resolve(__dirname, "dist"),
       // match the output 'publicPath'
       publicPath: "/",
     },
@@ -36,7 +36,6 @@ module.exports = {
     },
   },
   plugins: [
-    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       title: "Development",
       filename: "index.bundle.js",
@@ -59,24 +58,24 @@ module.exports = {
       },
       {
         test: /\.html$/i,
-        loader: 'html-loader',
+        loader: "html-loader",
         options: {
           sources: {
             list: [
               {
-                tag: 'img',
-                attribute: 'data-src',
-                type: 'src',
+                tag: "img",
+                attribute: "data-src",
+                type: "src",
               },
               {
-                tag: 'img',
-                attribute: 'src',
-                type: 'src',
+                tag: "img",
+                attribute: "src",
+                type: "src",
               },
               {
-                tag: 'link',
-                attribute: 'href',
-                type: 'src',
+                tag: "link",
+                attribute: "href",
+                type: "src",
               },
             ],
           },
@@ -85,22 +84,12 @@ module.exports = {
     ],
   },
 
-  target: "node",
-  node: {
-    __dirname: false,
-    __filename: false,
-    global: true
-  },
-
   resolve: {
     // Enable importing JS / JSX files without specifying their extension
     extensions: [".js", ".jsx"],
+    fallback: {},
     fallback: {
-      path: require.resolve("path-browserify"),
-      nock: require.resolve('nock'),
-    },
-    fallback: {
-      util: require.resolve("util/"),
+      util: false,
       fs: false,
       tls: false,
       net: false,
@@ -108,7 +97,7 @@ module.exports = {
       zlib: false,
       http: false,
       https: false,
-      crypto: require.resolve("crypto-browserify"),
+      crypto: false,
       assert: false,
       buffer: false,
       process: false,
@@ -116,7 +105,9 @@ module.exports = {
       url: false,
       stream: false,
       constants: false,
-      path: require.resolve("path-browserify"),
+      path: false,
+      querystring: false,
+      timers: false,
     },
   },
 };
