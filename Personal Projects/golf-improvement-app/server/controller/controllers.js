@@ -50,21 +50,21 @@ golfController.updateDrill = async (drillId, updatedDrill) => {
 
 const userController = {};
 
-userController.signup = async (req, res) => {
+userController.signup = async (req, res, next) => {
   try {
     const { username, password} = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const createText =
       "INSERT INTO users_credentials (user_id, username, password) VALUES (DEFAULT, $1, $2) RETURNING user_id";
     const { rows } = await query(createText, [username, hashedPassword]);
-    res.status(201).send({ user_id: rows[0].user_id });
+    res.locals.user = rows[0]
+    return next();
   } catch (error) {
-    console.error(error);
-    res.status(500).send("error creating user");
+    return next(error);
   }
 };
 
-userController.loginUser = async (req, res) => {
+userController.loginUser = async (req, res, next) => {
   try {
     const { username, password } = req.body;
     // get user from database
@@ -79,36 +79,41 @@ userController.loginUser = async (req, res) => {
     if (!isPasswordMatch) {
       return res.status(401).send('Invalid username or password');
     }
-    res.status(200).send('Login successful');
+    res.locals.user = rows[0];
+    return next();
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Error logging in');
+    return next(error);
   }
 };
 
-userController.getProfile = async (req, res) => {
+userController.getProfile = async (req, res, next) => {
   try {
-    const { userId } = req.body;
+    const userId = req.cookies.user_id;
+    if (!userId) {
+      return res.status(401).send('User not authenticated');
+    }
     const getProfileText = 'SELECT * FROM users WHERE user_id = $1';
+    const { rows } = await pool.query(getProfileText, [userId]);
     if(rows.length === 0) {
       return res.status(401).send('Invalid user');
     }
-    res.status(200).send(rows[0]);
+    res.locals.profile = rows[0];
+    return next();
   } catch (error) {
-    console.error(error);
-    res.status(500).send('error getting user');
+    return next(error);
   }
 };
 
+
 userController.updateUserScore = async (req, res) => {
-  const { user_id } = req.params;
+  const userId = req.cookies.user_id
   const { category, rating } = req.body;
 
   try {
     const client = await pool.connect();
     const result = await client.query(
       "SELECT * FROM users WHERE user_id = $1",
-      [user_id]
+      [userId]
     );
     if (result.rowCount === 0) {
       client.release();
@@ -116,11 +121,11 @@ userController.updateUserScore = async (req, res) => {
     }
 
     const updatedScore = { ...result.rows[0].score };
-    updatedScore[category] = rating;
+    updatedScore[category] += (rating / 2);
 
     await client.query(
       "UPDATE users SET score = $1 WHERE user_id = $2",
-      [updatedScore, user_id]
+      [updatedScore, userId]
     );
 
     client.release();
