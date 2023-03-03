@@ -1,6 +1,7 @@
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
-const { node } = require('prop-types');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+
 module.exports = {
     devServer: {
         static: {
@@ -20,8 +21,9 @@ module.exports = {
     },
     plugins: [
         new HTMLWebpackPlugin({
-            template: './src/index.html' 
-        })
+            template: './public/index.html' 
+        }),
+        new ReactRefreshWebpackPlugin(),
     ],
 
     module: {
@@ -52,5 +54,10 @@ module.exports = {
     },
     resolve: {
         extensions: ['.js', '.jsx'],
+        alias: {
+          './scenes/login': path.resolve(__dirname, 'src/scenes/login.jsx'),
+          './scenes/signup': path.resolve(__dirname, 'src/scenes/signup.jsx'),
+          './src/index.html': path.resolve(__dirname, 'public/index.html')
+        }
       },   
 }

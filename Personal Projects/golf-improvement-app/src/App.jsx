@@ -1,7 +1,6 @@
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./scenes/home";
-import LoginPage from "./scenes/login";
-import SignupPage from "./scenes/signup"
 import ProfilePage from "./scenes/profile";
 import DrillsPage from "./scenes/drill";
 import SkillsPage from "./scenes/categories";
@@ -16,24 +15,6 @@ function App() {
           element={
             <div className="app">
               <HomePage />
-            </div>
-          }
-        />
-        <Route
-          exact
-          path="/login"
-          element={
-            <div className="app">
-              <LoginPage />
-            </div>
-          }
-        />
-        <Route
-          exact
-          path="/signup"
-          element={
-            <div className="app">
-              <SignupPage />
             </div>
           }
         />
